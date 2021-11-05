@@ -1,17 +1,47 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Тест AXIOSa</h1>
+    <AlPost
+      :posts="posts"
+      :isError="isError"
+    />
+    <button v-if="!isLoaded" @click="buttClick">Загрузить</button>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
+import AlPost from "./components/alPosts.vue";
+import axios from "axios";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    AlPost,
+  },
+  data() {
+    return {
+      posts: [],
+      isError : false,
+      isLoaded: false,
+    }
+  },
+  methods: {
+    buttClick() {
+      this.loadPosts();
+    },
+    async loadPosts() {
+      try {
+        const res = await axios.get("https://jsonplaceholder.typicode.com/posts")
+        this.isError = false;
+        this.posts = res.data
+      }
+      catch (err) {
+        this.isError = true
+      }
+      finally {
+        this.isLoaded = true;
+      }
+    }
   }
 }
 </script>
